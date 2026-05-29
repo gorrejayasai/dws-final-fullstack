@@ -1,0 +1,165 @@
+<div class="layout">
+  <!-- SIDEBAR -->
+  <app-sidebar />
+
+  <!-- MAIN -->
+  <div class="main">
+    <app-topbar title="Top Up Wallet" subtitle="Add funds to your PayVault wallet" />
+
+    <div class="content">
+      <div class="page-grid">
+        <!-- LEFT: FORM -->
+        <div class="form-card">
+          <h2>Add Money</h2>
+          <p class="card-sub">Funds are added to your wallet instantly.</p>
+
+          @if (errorMsg) {
+            <div class="error-box">{{ errorMsg }}</div>
+          }
+
+          <!-- Balance mini card -->
+          <div class="bal-mini">
+            <div class="bal-mini-lbl">Current Balance</div>
+            <div class="bal-mini-val">{{ fmt(balance) }}</div>
+          </div>
+
+          <!-- Amount -->
+          <div class="form-group">
+            <label class="form-label">Amount</label>
+            <div class="amount-wrap">
+              <span class="amount-prefix">₹</span>
+              <input
+                type="number"
+                class="amount-input"
+                [(ngModel)]="amount"
+                (ngModelChange)="onAmountChange()"
+                placeholder="0.00"
+                min="1"
+                max="50000"
+                [class.error]="amtHint.cls === 'err'"
+              />
+              <span class="amount-suffix">INR</span>
+            </div>
+            @if (amtHint.text) {
+              <div class="amt-hint" [class]="amtHint.cls">{{ amtHint.text }}</div>
+            }
+          </div>
+
+          <!-- Quick amounts -->
+          <div class="quick-amounts">
+            @for (qa of quickAmounts; track qa) {
+              <button class="qa" [class.sel]="selectedQuick === qa" (click)="selectQuick(qa)">
+                ₹{{ qa.toLocaleString('en-IN') }}
+              </button>
+            }
+          </div>
+
+          <!-- Payment method (UI only — no gateway integration yet) -->
+          <div class="pm-section">
+            <label class="form-label pm-title">Payment Method</label>
+            <div class="pm-grid">
+              @for (m of paymentMethods; track m.id) {
+                <button
+                  type="button"
+                  class="pm-card"
+                  [class.pm-selected]="selectedMethod === m.id"
+                  (click)="selectMethod(m.id)"
+                >
+                  <div class="pm-top">
+                    @if (m.id === 'netbanking') {
+                      <span class="pm-icon-card" aria-hidden="true">
+                        <span class="pm-dot pm-dot-1"></span>
+                        <span class="pm-dot pm-dot-2"></span>
+                      </span>
+                    } @else {
+                      <span class="pm-badge" [class]="m.badgeCls">{{ m.badge }}</span>
+                    }
+                    @if (selectedMethod === m.id) {
+                      <span class="pm-check" aria-hidden="true">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.5 6l2.5 2.5 4.5-5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    }
+                  </div>
+                  <div class="pm-label">{{ m.label }}</div>
+                  <div class="pm-sub">{{ m.sublabel }}</div>
+                </button>
+              }
+            </div>
+          </div>
+
+          <button class="btn-full" [disabled]="!canSubmit" (click)="onSubmit()">
+            @if (loading) {
+              <div class="btn-spinner"></div>
+              Processing…
+            } @else {
+              Add ₹{{ amountNum > 0 ? amountNum.toLocaleString('en-IN') : '0' }} to Wallet
+            }
+          </button>
+
+          <p class="limit-note">Maximum ₹50,000 per transaction · Instant credit</p>
+        </div>
+
+        <!-- RIGHT: INFO -->
+        <div class="info-panel">
+          <div class="info-card">
+            <h3>How it works</h3>
+            <div class="info-step">
+              <div class="is-num">1</div>
+              <div>
+                <strong>Enter Amount</strong>
+                <p>Choose or type the amount you want to add.</p>
+              </div>
+            </div>
+            <div class="info-step">
+              <div class="is-num">2</div>
+              <div>
+                <strong>Instant Credit</strong>
+                <p>Funds are credited to your wallet immediately.</p>
+              </div>
+            </div>
+            <div class="info-step">
+              <div class="is-num">3</div>
+              <div>
+                <strong>Start Transacting</strong>
+                <p>Use your balance for transfers and withdrawals.</p>
+              </div>
+            </div>
+          </div>
+          <div class="limits-card">
+            <h3>Limits</h3>
+            <div class="lim-row"><span>Per Transaction</span><strong>₹50,000</strong></div>
+            <div class="lim-row"><span>Minimum</span><strong>₹1</strong></div>
+            <div class="lim-row"><span>Max Wallet Balance</span><strong>₹10,00,000</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+@if (showSuccess) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path
+            d="M10 20l7 7 13-14"
+            stroke="#10B981"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <h3>Top Up Successful!</h3>
+      <div class="modal-amt">{{ fmt(amountNum) }}</div>
+      <p>Added to your PayVault wallet</p>
+      <div class="modal-txn">Ref: {{ successTxId }}</div>
+      <button class="btn-full" (click)="reset()">Add More Money</button>
+      <a routerLink="/wallet" class="btn-outline-full">View Wallet</a>
+    </div>
+  </div>
+}

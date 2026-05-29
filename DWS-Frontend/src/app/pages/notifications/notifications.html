@@ -1,0 +1,132 @@
+<div class="layout">
+  <app-sidebar />
+
+  <div class="main">
+    <app-topbar
+      title="Notifications"
+      subtitle="All your account activity"
+      [showNotifications]="false"
+    />
+
+    <div class="content">
+      <!-- FILTER TABS -->
+      <div class="filter-tabs">
+        <button class="ftab" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
+          All
+        </button>
+        <button
+          class="ftab"
+          [class.active]="activeFilter === 'transactions'"
+          (click)="setFilter('transactions')"
+        >
+          Transactions
+        </button>
+        <button
+          class="ftab"
+          [class.active]="activeFilter === 'system'"
+          (click)="setFilter('system')"
+        >
+          System
+        </button>
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <span>Loading notifications…</span>
+        </div>
+      } @else if (filtered.length === 0) {
+        <div class="empty-state">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <path
+              d="M28 6a15 15 0 00-15 15v9l-6 6v3h42v-3l-6-6V21A15 15 0 0028 6zM22 44a6 6 0 0012 0"
+              stroke="#9C94C0"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+          <h3>No notifications yet</h3>
+          <p>Your account activity will appear here</p>
+        </div>
+      } @else {
+        @for (group of groupedNotifs; track group.label) {
+          <div class="notif-group">
+            <div class="group-label">{{ group.label }}</div>
+            @for (n of group.items; track n.id) {
+              <div class="notif-card">  
+                <div class="notif-icon" [style.background]="n.iconBg">
+                  @if (n.iconType === 'up') {
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M10 16V4M6 8l4-4 4 4"
+                        [attr.stroke]="n.iconColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  } @else if (n.iconType === 'down') {
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M10 4v12M6 12l4 4 4-4"
+                        [attr.stroke]="n.iconColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  } @else if (n.iconType === 'transfer') {
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M4 10h12M12 6l4 4-4 4"
+                        [attr.stroke]="n.iconColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  } @else {
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="7"
+                        [attr.stroke]="n.iconColor"
+                        stroke-width="1.6"
+                      />
+                      <path
+                        d="M10 7V10M10 13v.01"
+                        [attr.stroke]="n.iconColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">{{ n.title }}</div>
+                  <div class="notif-desc">{{ n.desc }}</div>
+                  <div class="notif-time">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2" />
+                      <path
+                        d="M6 4V6L7.5 7.5"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                    {{ n.time }}
+                  </div>
+                </div>
+                @if (n.amt) {
+                  <div class="notif-amt" [class]="n.amtClass">{{ n.amt }}</div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

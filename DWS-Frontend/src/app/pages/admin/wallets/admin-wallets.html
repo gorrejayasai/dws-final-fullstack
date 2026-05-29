@@ -1,0 +1,248 @@
+<div class="layout">
+  <div class="sb-overlay" [class.open]="sidebarExpanded" (click)="toggleSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.expanded]="sidebarExpanded">
+    <div class="sb-logo">
+      <div class="sb-logo-icon"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M4 11C4 7.13 7.13 4 11 4C14.87 4 18 7.13 18 11" stroke="white" stroke-width="2.2" stroke-linecap="round"/><circle cx="11" cy="11" r="3" fill="white"/></svg></div>
+      <span class="sb-logo-text">Pay<span>Vault</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Overview</div>
+      <a routerLink="/admin/dashboard" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><rect x="1" y="1" width="7" height="7" rx="2" stroke-width="1.6"/><rect x="10" y="1" width="7" height="7" rx="2" stroke-width="1.6"/><rect x="1" y="10" width="7" height="7" rx="2" stroke-width="1.6"/><rect x="10" y="10" width="7" height="7" rx="2" stroke-width="1.6"/></svg>
+        <span class="sb-label">Dashboard</span>
+      </a>
+      <div class="sb-section-label">Management</div>
+      <a routerLink="/admin/users" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><circle cx="9" cy="6" r="3.5" stroke-width="1.6"/><path d="M2 16c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="sb-label">Users</span>
+      </a>
+      <a routerLink="/admin/kyc" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><path d="M9 1L16 4V8C16 12.4 12.9 16.3 9 18C5.1 16.3 2 12.4 2 8V4L9 1Z" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span class="sb-label">KYC</span>
+      </a>
+      <a routerLink="/admin/wallets" class="sb-item active">
+        <svg class="sb-icon" viewBox="0 0 18 18"><rect x="1" y="4" width="16" height="12" rx="2.5" stroke-width="1.6"/><path d="M1 8h16M12 12h2" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="sb-label">Wallets</span>
+      </a>
+      <a routerLink="/admin/transactions" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><path d="M3 5h12M3 9h8M3 13h5" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="sb-label">Transactions</span>
+      </a>
+      <div class="sb-divider"></div>
+      <div class="sb-section-label">System</div>
+      <a routerLink="/admin/health" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><path d="M2 9h3l2-5 2 10 2-6 2 3h3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="sb-label">Health</span>
+      </a>
+      <a routerLink="/admin/settings" class="sb-item">
+        <svg class="sb-icon" viewBox="0 0 18 18"><circle cx="9" cy="9" r="2.5" stroke-width="1.6"/><path d="M9 2v1M9 15v1M2 9h1M15 9h1M4.2 4.2l.7.7M13.1 13.1l.7.7M4.2 13.8l.7-.7M13.1 4.9l.7-.7" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="sb-label">Settings</span>
+      </a>
+    </nav>
+    <div class="sb-user">
+      <div class="sb-avatar">{{ initials }}</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name">{{ username }}</div>
+        <div class="sb-user-role">Administrator</div>
+      </div>
+      <div class="sb-logout" (click)="logout()" title="Logout">
+        <svg viewBox="0 0 14 14"><path d="M5 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3M9 10l4-3-4-3M5 7h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="hamburger" (click)="toggleSidebar()">
+        <svg viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+      </div>
+      <div>
+        <div class="topbar-title">Wallet Management</div>
+        <div class="topbar-sub">Freeze, unfreeze or close user wallets</div>
+      </div>
+      <div class="topbar-right">
+        <span class="admin-badge">ADMIN</span>
+        <button type="button" class="topbar-av" (click)="logout()" title="Logout">{{ initials }}</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- MINI STATS -->
+      <div class="mini-stats">
+        <div class="mini-card">
+          <div class="mini-icon mi-purple">
+            <svg viewBox="0 0 18 18"><rect x="1" y="4" width="16" height="12" rx="2.5" stroke-width="1.6"/><path d="M1 8h16M12 12h2" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mini-info"><div class="mini-label">Total Wallets</div><div class="mini-val">{{ totalCount }}</div></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-icon mi-green">
+            <svg viewBox="0 0 18 18"><path d="M3 9l4 4 8-8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="mini-info"><div class="mini-label">Active</div><div class="mini-val">{{ activeCount }}</div></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-icon mi-yellow">
+            <svg viewBox="0 0 18 18"><rect x="4" y="7" width="10" height="9" rx="2" stroke-width="1.6"/><path d="M6 7V5a3 3 0 016 0v2" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mini-info"><div class="mini-label">Frozen</div><div class="mini-val">{{ frozenCount }}</div></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-icon mi-red">
+            <svg viewBox="0 0 18 18"><path d="M5 5l8 8M13 5l-8 8" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mini-info"><div class="mini-label">Closed</div><div class="mini-val">{{ closedCount }}</div></div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK MESSAGES -->
+      @if (actionSuccess) {
+        <div class="alert-success">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5 6.5-7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {{ actionSuccess }}
+        </div>
+      }
+      @if (actionError) {
+        <div class="alert-error">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#EF4444" stroke-width="1.5"/><path d="M8 5v4M8 11h.01" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/></svg>
+          {{ actionError }}
+        </div>
+      }
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="chips">
+          <button class="chip" [class.chip-active]="filterStatus==='ALL'" (click)="setFilter('ALL')">All</button>
+          <button class="chip chip-green" [class.chip-active]="filterStatus==='ACTIVE'" (click)="setFilter('ACTIVE')">Active</button>
+          <button class="chip chip-yellow" [class.chip-active]="filterStatus==='FROZEN'" (click)="setFilter('FROZEN')">Frozen</button>
+          <button class="chip chip-red" [class.chip-active]="filterStatus==='CLOSED'" (click)="setFilter('CLOSED')">Closed</button>
+        </div>
+        <div class="right-actions">
+          <button class="btn-refresh" (click)="loadWallets()" [disabled]="listLoading">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M13 7.5a5.5 5.5 0 11-1.1-3.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M13 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            {{ listLoading ? 'Refreshing…' : 'Refresh' }}
+          </button>
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5" stroke-width="1.6"/><path d="M10 10l3.5 3.5" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input class="search-input" type="text" placeholder="Search by Wallet/User ID…" [(ngModel)]="searchTerm" />
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="card">
+        <div class="table-wrap">
+          @if (listLoading) {
+            <div class="empty-row">Loading wallets…</div>
+          } @else if (listError) {
+            <div class="empty-row error-row">{{ listError }}</div>
+          } @else if (filteredWallets.length === 0) {
+            <div class="empty-row">No wallets found</div>
+          } @else {
+            <table>
+              <thead>
+                <tr>
+                  <th>Wallet ID</th>
+                  <th>User ID</th>
+                  <th>Currency</th>
+                  <th>Available Balance</th>
+                  <th>Held Balance</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (w of filteredWallets; track w.id) {
+                  <tr>
+                    <td class="uid-cell">#{{ w.id }}</td>
+                    <td class="text-muted">#{{ w.userId }}</td>
+                    <td class="text-muted">{{ w.currency }}</td>
+                    <td class="bal-cell">{{ fmt(w.availableBalance) }}</td>
+                    <td class="text-muted">{{ fmt(w.heldBalance) }}</td>
+                    <td><span class="badge" [class]="statusClass(w.status)">{{ w.status }}</span></td>
+                    <td class="text-muted">{{ fmtDate(w.createdAt) }}</td>
+                    <td class="actions-cell">
+                      @if (actionLoading === w.id) {
+                        <span class="act-spinner"></span>
+                      } @else if (w.status === 'ACTIVE') {
+                        <button class="act-btn act-freeze" (click)="freeze(w.id)" title="Freeze wallet">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="4" y="7" width="8" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M6 7V5a2 2 0 014 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                          Freeze
+                        </button>
+                        <button class="act-btn act-close" (click)="confirmClose(w.id)" title="Close wallet">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                          Close
+                        </button>
+                      } @else if (w.status === 'FROZEN') {
+                        <button class="act-btn act-unfreeze" (click)="unfreeze(w.id)" title="Unfreeze wallet">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                          Unfreeze
+                        </button>
+                        <button class="act-btn act-close" (click)="confirmClose(w.id)" title="Close wallet">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                          Close
+                        </button>
+                      } @else {
+                        <span class="act-closed">Closed</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+
+      <div class="pagination">
+        <span class="pg-info">Showing {{ filteredWallets.length }} of {{ totalCount }} wallets</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSE CONFIRM MODAL -->
+@if (showCloseConfirm !== null) {
+  <div class="modal-overlay" (click)="cancelClose()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">Close Wallet #{{ showCloseConfirm }}</div>
+        <button class="modal-close" (click)="cancelClose()">
+          <svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-sub">This action is <strong>permanent and cannot be undone</strong>. The wallet balance must be ₹0 before closing. Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cancelClose()">Cancel</button>
+        <button class="btn-confirm-logout" (click)="doClose()">Close Wallet</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- LOGOUT CONFIRM MODAL -->
+@if (showLogoutModal) {
+  <div class="modal-overlay" (click)="closeLogoutModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">Confirm Logout</div>
+        <button class="modal-close" (click)="closeLogoutModal()">
+          <svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-sub">Are you sure you want to logout from your admin session?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeLogoutModal()">Cancel</button>
+        <button class="btn-confirm-logout" (click)="doLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+}

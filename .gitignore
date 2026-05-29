@@ -1,0 +1,9 @@
+node_modules/
+target/
+.angular/
+dist/
+uploads/
+.idea/
+*.class
+*.jar
+*.war

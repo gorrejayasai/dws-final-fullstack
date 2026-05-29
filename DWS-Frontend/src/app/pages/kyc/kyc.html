@@ -1,0 +1,267 @@
+<div class="layout">
+  <app-sidebar/>
+
+  <div class="main">
+
+    <app-topbar
+      title="KYC Verification"
+      subtitle="Verify your identity to unlock full features"
+    />
+
+    <div class="content">
+      @if (kycLoading) {
+        <div class="loading-state">
+          <div class="spinner-lg"></div>
+          <p>Loading KYC status…</p>
+        </div>
+      } @else {
+
+        <!-- STATUS BANNER -->
+        @if (kyc?.status === 'APPROVED') {
+          <div class="status-banner sb-approved">
+            <div class="sban-icon" style="background: rgba(16, 185, 129, 0.1)">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M11 2L19 5.5V10C19 14.8 15.4 18.9 11 21C6.6 18.9 3 14.8 3 10V5.5L11 2Z" stroke="#10B981" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M7.5 11l2.5 2.5 4.5-5" stroke="#10B981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sban-title" style="color: #059669">KYC Verified ✓</div>
+              <div class="sban-desc" style="color: #10b981">Your identity has been verified. All features are unlocked.</div>
+            </div>
+          </div>
+        } @else if (kyc?.status === 'PENDING') {
+          <div class="status-banner sb-pending">
+            <div class="sban-icon" style="background: rgba(245, 158, 11, 0.1)">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8" stroke="#F59E0B" stroke-width="1.6"/>
+                <path d="M11 8V11M11 14V14.01" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sban-title" style="color: #b45309">Under Review</div>
+              <div class="sban-desc" style="color: #f59e0b">Your documents are being reviewed. This usually takes 1–2 business days.</div>
+            </div>
+          </div>
+        } @else if (kyc?.status === 'REJECTED') {
+          <div class="status-banner sb-rejected">
+            <div class="sban-icon" style="background: rgba(239, 68, 68, 0.08)">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8" stroke="#EF4444" stroke-width="1.6"/>
+                <path d="M8 8l6 6M14 8l-6 6" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sban-title" style="color: #dc2626">KYC Rejected</div>
+              <div class="sban-desc" style="color: #ef4444">
+                {{ kyc?.reviewRemarks || 'Your KYC was rejected. Please resubmit with correct documents.' }}
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div class="status-banner sb-new">
+            <div class="sban-icon" style="background: rgba(108, 99, 255, 0.1)">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M11 2L19 5.5V10C19 14.8 15.4 18.9 11 21C6.6 18.9 3 14.8 3 10V5.5L11 2Z" stroke="#6C63FF" stroke-width="1.6" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sban-title" style="color: #4f46e5">Identity Verification Required</div>
+              <div class="sban-desc" style="color: #6c63ff">Submit your Aadhaar or PAN document to verify your identity and create a wallet.</div>
+            </div>
+          </div>
+        }
+
+        <!-- SUCCESS / ERROR MSGS -->
+        @if (successMsg) {
+          <div class="success-msg">{{ successMsg }}</div>
+        }
+        @if (errorMsg) {
+          <div class="error-box">{{ errorMsg }}</div>
+        }
+
+        <!-- PENDING LOCK NOTICE -->
+        @if (kyc?.status === 'PENDING') {
+          <div class="locked-notice">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="5" y="9" width="10" height="8" rx="2" stroke="#F59E0B" stroke-width="1.6"/>
+              <path d="M7 9V7a3 3 0 016 0v2" stroke="#F59E0B" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <div class="locked-title">Changes Locked</div>
+              <div class="locked-sub">Your KYC is under review. You cannot make changes until an admin accepts or rejects your submission.</div>
+            </div>
+          </div>
+        }
+
+        <!-- FORM (show only when no KYC yet, or REJECTED) -->
+        @if (!kyc || kyc.status === 'REJECTED') {
+          <div class="form-card">
+            <div class="card-head">
+              @if (kyc?.status === 'REJECTED') {
+                <div class="card-head-icon" style="background: rgba(239, 68, 68, 0.08)">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <circle cx="11" cy="11" r="8" stroke="#EF4444" stroke-width="1.6"/>
+                    <path d="M8 8l6 6M14 8l-6 6" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>Resubmit Your Documents</h3>
+                  <p>Correct the issue and resubmit with a new document upload</p>
+                </div>
+              } @else {
+                <div class="card-head-icon">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M11 2L19 5.5V10C19 14.8 15.4 18.9 11 21C6.6 18.9 3 14.8 3 10V5.5L11 2Z" stroke="#6C63FF" stroke-width="1.6" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>Identity Verification</h3>
+                  <p>Submit one government-issued ID — Aadhaar or PAN</p>
+                </div>
+              }
+            </div>
+
+            <!-- ID TYPE TOGGLE -->
+            <div class="id-type-row">
+              <button class="id-type-btn" [class.active]="idType === 'AADHAAR'" (click)="switchIdType('AADHAAR')">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <rect x="1" y="3" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M5 9h4M5 12h6M13 7h1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                Aadhaar Card
+              </button>
+              <button class="id-type-btn" [class.active]="idType === 'PAN'" (click)="switchIdType('PAN')">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <rect x="1" y="3" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M5 7h8M5 10h5M5 13h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                PAN Card
+              </button>
+            </div>
+
+            <!-- FULL NAME + DATE OF BIRTH -->
+            <div class="form-row2" style="margin-bottom:20px">
+              <div class="form-group">
+                <label class="form-label">Full Name <span class="req">*</span></label>
+                <input type="text" class="form-input" [(ngModel)]="verifiedName"
+                       placeholder="As printed on your document" maxlength="100" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Birth <span class="req">*</span></label>
+                <input type="date" class="form-input" [(ngModel)]="verifiedDob" [max]="maxDob" />
+              </div>
+            </div>
+
+            <!-- DOCUMENT NUMBER -->
+            <div class="form-group" style="margin-bottom:20px">
+              <label class="form-label">
+                {{ idType === 'AADHAAR' ? 'Aadhaar Number' : 'PAN Number' }}
+                <span class="req">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="docNumber"
+                [placeholder]="placeholder"
+                [maxlength]="maxLen"
+                [style.text-transform]="idType === 'PAN' ? 'uppercase' : 'none'"
+                [class.input-ok]="docNumber && isDocValid"
+                [class.input-err]="docNumber && !isDocValid"
+              />
+              <div class="field-hint" [class]="hint.cls">{{ hint.text }}</div>
+            </div>
+
+            <!-- FILE UPLOAD -->
+            <div class="form-group" style="margin-bottom:24px">
+              <label class="form-label">Upload Document <span class="req">*</span></label>
+              <label class="upload-area" [class.has-file]="!!selectedFile">
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png"
+                       (change)="onFileChange($event)" style="display:none" />
+                @if (!selectedFile) {
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 16V8M9 11l3-3 3 3" stroke="#9CA3AF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="#9CA3AF" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                  <div class="upload-label">Click to upload</div>
+                  <div class="upload-hint">PDF, JPG or PNG · max 5 MB</div>
+                } @else {
+                  <div class="file-chip">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                      <path d="M4 2h6l4 4v8a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="#6C63FF" stroke-width="1.4" stroke-linejoin="round"/>
+                      <path d="M10 2v4h4" stroke="#6C63FF" stroke-width="1.4"/>
+                    </svg>
+                    {{ selectedFile.name }}
+                    <button type="button" class="file-remove" (click)="removeFile($event)">✕</button>
+                  </div>
+                }
+              </label>
+            </div>
+
+            <!-- FORMAT HINTS -->
+            <div class="doc-info">
+              @if (idType === 'AADHAAR') {
+                <div class="di-row"><span class="di-label">Format</span><span class="di-val">Exactly 12 digits</span></div>
+                <div class="di-row"><span class="di-label">Example</span><span class="di-val">123456789012</span></div>
+              } @else {
+                <div class="di-row"><span class="di-label">Format</span><span class="di-val">10 alphanumeric, min 4 letters</span></div>
+                <div class="di-row"><span class="di-label">Example</span><span class="di-val">ABCDE1234F</span></div>
+              }
+              <div class="di-row"><span class="di-label">Review time</span><span class="di-val">1–2 business days</span></div>
+            </div>
+
+            <button
+              class="btn-full"
+              [disabled]="!canSubmit"
+              (click)="onSubmit()"
+              [style.background]="kyc?.status === 'REJECTED' ? 'linear-gradient(135deg,#EF4444,#DC2626)' : ''"
+            >
+              @if (loading) {
+                <div class="btn-spinner"></div> Submitting…
+              } @else if (kyc?.status === 'REJECTED') {
+                Resubmit KYC
+              } @else {
+                Submit KYC
+              }
+            </button>
+          </div>
+        }
+
+        <!-- APPROVED — show verified details -->
+        @if (kyc?.status === 'APPROVED') {
+          <div class="form-card">
+            <div class="card-head">
+              <div class="card-head-icon" style="background: rgba(16, 185, 129, 0.1)">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M7 11l3 3 5-5" stroke="#10B981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div><h3>Verified Documents</h3><p>Your identity is confirmed</p></div>
+            </div>
+            <div class="doc-info">
+              <div class="di-row"><span class="di-label">Status</span><span class="di-val" style="color:#10B981;font-weight:700">Approved ✓</span></div>
+              <div class="di-row"><span class="di-label">Submitted</span><span class="di-val">{{ kyc?.submittedAt ? fmtDate(kyc!.submittedAt) : '—' }}</span></div>
+              <div class="di-row"><span class="di-label">Reviewed</span><span class="di-val">{{ kyc?.reviewedAt ? fmtDate(kyc!.reviewedAt) : '—' }}</span></div>
+              @for (doc of kyc?.documents ?? []; track doc.id) {
+                <div class="di-row">
+                  <span class="di-label">{{ doc.verificationType === 'AADHAAR_BASED' ? 'Aadhaar' : 'PAN' }}</span>
+                  <span class="di-val">{{ doc.verifiedName || doc.fileName }}</span>
+                </div>
+                @if (doc.verifiedDob) {
+                  <div class="di-row">
+                    <span class="di-label">Date of Birth</span>
+                    <span class="di-val">{{ fmtDate(doc.verifiedDob) }}</span>
+                  </div>
+                }
+                <div class="di-row">
+                  <span class="di-label">Document</span>
+                  <span class="di-val">{{ doc.fileName }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
