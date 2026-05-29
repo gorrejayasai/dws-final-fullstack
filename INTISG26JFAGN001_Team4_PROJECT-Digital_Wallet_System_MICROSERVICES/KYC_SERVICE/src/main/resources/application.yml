@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: kyc-service
+  profiles:
+    active: dev
+
+  # Allow KYC documents up to 10 MB. Defaults (1 MB) reject most modern phone photos
+  # of Aadhaar / PAN cards.
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8083
+
+app:
+  upload:
+    dir: ./uploads/kyc
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+# Actuator — required for Eureka health-check registration
+# /actuator/health is the endpoint Eureka polls to know if this service is UP
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+
+
+# OpenFeign client configuration of User service and Notification Service.
+feign:
+  client:
+    config:
+      user-service:
+        connect-timeout: 5000   # 5 seconds
+        read-timeout: 5000      # 5 seconds
+        logger-level: BASIC     # logs method, URL, status code and execution time
+      notification-service:     # NEW: Configuration for notification service
+        connect-timeout: 5000   # 5 seconds
+        read-timeout: 5000      # 5 seconds
+        logger-level: BASIC     # logs method, URL, status code and execution time
+

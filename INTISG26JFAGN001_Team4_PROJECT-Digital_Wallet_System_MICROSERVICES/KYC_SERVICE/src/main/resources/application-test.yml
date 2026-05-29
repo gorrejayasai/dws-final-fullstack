@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:kyc_test_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true                         # accessible at /h2-console during tests if needed
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop                 # fresh schema per test run
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+#app:
+#  user-service:
+#    base-url: http://localhost:8081         # mocked in unit tests via @Mock
+
+app:
+  upload:
+    # Temp directory for test-profile file storage so tests never touch the dev uploads tree.
+    dir: ${java.io.tmpdir}/kyc-test-uploads

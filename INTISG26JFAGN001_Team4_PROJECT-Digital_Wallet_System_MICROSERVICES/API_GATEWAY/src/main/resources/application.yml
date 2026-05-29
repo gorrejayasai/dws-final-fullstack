@@ -1,0 +1,66 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: API-GATEWAY
+
+# ── Eureka ───────────────────────────────────────────────────────────────────
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# ── Resilience4j Circuit Breaker ─────────────────────────────────────────────
+resilience4j:
+  circuitbreaker:
+    instances:
+      USER-SERVICE:                         # Matches the Feign client name
+        sliding-window-size: 10
+        failure-rate-threshold: 50          # Open CB after 50% failures
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        minimum-number-of-calls: 5
+
+# ── SpringDoc / Swagger ───────────────────────────────────────────────────────
+springdoc:
+  swagger-ui:
+    syntax-highlight:
+      theme: monokai
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    urls:
+      - name: USER-SERVICE
+        url: /swagger/user/v3/api-docs
+      - name: WALLET-SERVICE
+        url: /swagger/wallet/v3/api-docs
+      - name: KYC-SERVICE
+        url: /swagger/kyc/v3/api-docs
+      - name: TRANSACTION-SERVICE
+        url: /swagger/transaction/v3/api-docs
+      - name: NOTIFICATION-SERVICE
+        url: /swagger/notification/v3/api-docs
+  api-docs:
+    path: /v3/api-docs
+
+
+# ── Actuator ─────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,circuitbreakers,ratelimiters
+  endpoint:
+    health:
+      show-details: always
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  level:
+    com.cognizant.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    feign: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
